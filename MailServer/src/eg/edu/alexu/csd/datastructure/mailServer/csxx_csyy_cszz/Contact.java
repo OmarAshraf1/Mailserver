@@ -4,9 +4,9 @@ import eg.edu.alexu.csd.datastructure.mailServer.IContact;
 
 public class Contact implements IContact {
 	
-	String email ;
-	String pass ;
-	String name ;
+	public String email ;
+	public String pass ;
+	public String name ;
 	
 
 }

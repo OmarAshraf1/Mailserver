@@ -19,14 +19,23 @@ import eg.edu.alexu.csd.datastructure.mailServer.IApp;
 import eg.edu.alexu.csd.datastructure.mailServer.IContact;
 import eg.edu.alexu.csd.datastructure.mailServer.IFilter;
 import eg.edu.alexu.csd.datastructure.mailServer.IFolder;
+import eg.edu.alexu.csd.datastructure.mailServer.IMail;
 import eg.edu.alexu.csd.datastructure.mailServer.ISort;
 
 public class MailServer implements IApp  {
-	public String fdate ;
-	public int priority ;
-	public String sender ;
-	public String subject ;
-	DoubleLinkedList dlf = new DoubleLinkedList();
+	public static String fdate ;
+	public static int priority ;
+	public static String sender ;
+	public static String subject ;
+	public static DoubleLinkedList dlf = new DoubleLinkedList();
+	public static String currfold ;
+	public static String sort ;
+	public static String filter ;
+	public static String sortby=null ;
+	public static String searchfor=null ;
+
+	public static String test ;        //
+	
 
 	public void directoryCreation() throws IOException {
         File server = new File("C:\\server");
@@ -47,7 +56,7 @@ public class MailServer implements IApp  {
         }
     }
 	
-	public String userfold ;  //to store signed in email
+	public static String userfold ;  //to store signed in email
     public boolean signin(String email, String password) throws IOException {
     	userfold = email ;
     	BufferedReader emailReader = new BufferedReader(new FileReader("C:\\server\\accounts\\emails.txt"));
@@ -160,7 +169,9 @@ public class MailServer implements IApp  {
 	}
 	
 	public void setViewingOptions(IFolder folder, IFilter filter, ISort sort) {
+		
 		//if date
+		dlf.clear();
 		Folder fold = (Folder) folder ;
 		FoldertoLL fll = new FoldertoLL() ; 
 		  		 //dlf  DoubleLinkedListfolder
@@ -171,15 +182,12 @@ public class MailServer implements IApp  {
 			// TODO Auto-generated catch block 
 			e.printStackTrace();
 		}
-		
-		
-		Sort sorting =new Sort() ;
-
-		Filter filtering = new Filter() ;
 		Filter ftype = (Filter) filter ;
 		Sort stype = (Sort) sort ;
+		Sort sorting = new Sort() ;
+		Filter filtering = new Filter() ;
 		
-		if(ftype==null && stype !=null) {
+		if(filter==null && sort !=null) {
 			if(stype.type.equals("date")) {
 				Dnode temp = dlf.getnode(0) ;
 				DoubleLinkedList datedll = new DoubleLinkedList ();
@@ -204,7 +212,7 @@ public class MailServer implements IApp  {
 				
 				datedll.reverse();   // //sorted descending
 			}
-			else if(stype.type.equals("priority") ) {
+			else if(stype.type.equals("priority") ) { 
 				sorting.sortpriority(dlf);
 			}
 			else if(stype.type.equals("sender") ) {
@@ -216,7 +224,7 @@ public class MailServer implements IApp  {
 			
 			
 		}
-		if(ftype!=null && stype ==null) {
+		if(filter!=null && sort ==null) {
 			if(ftype.type.equals("date")) {
 				Dnode temp = dlf.getnode(0) ;
 				DoubleLinkedList datedll = new DoubleLinkedList ();
@@ -244,16 +252,19 @@ public class MailServer implements IApp  {
 			}
 		
 			else if(ftype.type.equals("priority")) {
+				//test = ftype.type ;
 				sorting.sortpriority(dlf);
 				dlf =filtering.searchpriority(dlf, priority);
 				
 			}
 			else if(ftype.type.equals("sender")) {
+				
 				sorting.sortsender(dlf);
 				dlf =filtering.searchsender(dlf, sender);
 				
 			}
 			else if(ftype.type.equals("subject")) {
+				
 				sorting.sortsubject(dlf);
 				dlf =filtering.searchsubject(dlf, subject) ;
 				
@@ -262,5 +273,42 @@ public class MailServer implements IApp  {
 		
 	}
 	
+public IMail[] listEmails(int page) {
+	
+		//setViewingOptions(folder, filter, sort);
+		Folder f = new Folder() ;
+		Sort s = new Sort() ;
+		Filter filt =new Filter() ;
+		f.foldername = currfold ;
+		
+		
+		if (searchfor == null) {
+			filt = null;
+		} else {
+			filt.type = filter ;
+		}
+		if (sortby == null) {
+			s = null;
+		} else {
+			s.type = sort ; 
+		}
+		
+		setViewingOptions(f,filt,s);             //change dlf
+		int n ;
+		if(dlf.size()>=10) {
+			n=10 ;
+		}
+		else {
+			n= dlf.size() ; 
+		}
+		Mail mails[] = new Mail[n];
+		int i = page*10-10;
+		for (int j = 0 ; j < n ; j++) {
+			
+			mails[j] = (Mail) dlf.get(i) ;
+			i++ ;
+		}
+		return mails;
+	}
 
 }

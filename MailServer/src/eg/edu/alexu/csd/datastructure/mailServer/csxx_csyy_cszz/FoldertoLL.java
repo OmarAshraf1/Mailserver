@@ -15,7 +15,7 @@ public class FoldertoLL {
 	public DoubleLinkedList foldertoLL(Folder folder , String userfold) throws IOException {
 		DoubleLinkedList mails = new DoubleLinkedList();
 		//userfold : hwa el static file ely ha5do mn el sign in 
-	    BufferedReader input = new BufferedReader(new FileReader("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + folder + File.separator + "index.txt" ));
+	    BufferedReader input = new BufferedReader(new FileReader("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + folder.foldername + File.separator + "index.txt" ));
 	    String line;
 	    					// To read one mail
         while ((line = input.readLine()) != null) {
@@ -24,7 +24,7 @@ public class FoldertoLL {
     		mail.setSubject(line);	
     		mail.setDate(input.readLine());
     		mail.setSender(input.readLine());	
-    		mail.priority =  input.read() ;
+    		mail.priority =  input.read();
 	        while ( !(line = input.readLine()).equals("***") ) {
 	        	receivers.add(line);
 	        }

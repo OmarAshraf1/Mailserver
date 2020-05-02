@@ -1,6 +1,8 @@
 package eg.edu.alexu.csd.datastructure.mailServer.csxx_csyy_cszz;
 
-public class Folder {
+import eg.edu.alexu.csd.datastructure.mailServer.IFolder;
+
+public class Folder implements IFolder {
 	
 	public String foldername ; 
 

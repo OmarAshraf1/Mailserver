@@ -42,7 +42,7 @@ public class Sort implements ISort {
 			int pindex = start ;
 			Dnode temp = l.getnode(0) ;
 			int count = start ;
-			while(temp != null) {
+			while(temp.next != null) {
 				Date comp = (Date) l.get(count) ;
 				if(comp.compareTo(pivot) < 0 || comp.compareTo(pivot) == 0) {
 					m.swapnodes(m, count, pindex);  //to sort the whole email,we should swap the mail Dll
@@ -60,7 +60,7 @@ public class Sort implements ISort {
 			int pindex = start ;
 			Dnode temp = l.getnode(0) ;
 			int count = start ;
-			while(temp != null) {
+			while(temp.next != null) {
 				
 				Mail m1 = (Mail) l.get(count) ;
 				if(m1.priority <= pivot) {
@@ -118,7 +118,7 @@ public class Sort implements ISort {
 		int pindex = start ;
 		Dnode temp = l.getnode(0) ;
 		int count = start ;
-		while(temp != null) {
+		while(temp.next != null) {
 			
 			Mail m1 = (Mail) l.get(count) ;
 			if(m1.getSender().equals(pivot) || m1.getSender().compareTo(pivot) < 0) {
@@ -157,7 +157,7 @@ public class Sort implements ISort {
 		int pindex = start ;
 		Dnode temp = l.getnode(0) ;
 		int count = start ;
-		while(temp != null) {
+		while(temp.next != null) {
 			
 			Mail m1 = (Mail) l.get(count) ;
 			if(m1.getSubject().equals(pivot) || m1.getSubject().compareTo(pivot) < 0) {
