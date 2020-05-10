@@ -330,7 +330,7 @@ public class MailServer implements IApp {
 	public void deleteEmails(ILinkedList mails) {
 		
 		Folder f = new Folder("trash") ;
-		moveEmails(mails, f);
+		moveEmails(mails, (IFolder)f);
 		
 	}
 
