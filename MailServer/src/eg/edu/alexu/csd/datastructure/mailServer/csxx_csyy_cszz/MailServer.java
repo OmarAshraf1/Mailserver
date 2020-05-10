@@ -213,6 +213,7 @@ public class MailServer implements IApp {
 				datedll.reverse(); // //sorted descending
 			} else if (stype.type.equals("priority")) {
 				sorting.sortpriority(dlf);
+				dlf.reverse();
 			} else if (stype.type.equals("sender")) {
 				sorting.sortsender(dlf);
 			} else if (stype.type.equals("subject")) {
