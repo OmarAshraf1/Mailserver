@@ -1,7 +1,4 @@
-package eg.edu.alexu.csd.datastructure.mailServer.csxx_csyy_cszz;
-
-import eg.edu.alexu.csd.datastructure.linkedList.csxx_csyy.singlelinkedlist;
-import eg.edu.alexu.csd.datastructure.mailServer.IMail;
+package eg.edu.alexu.csd.datastructure.mailServer;
 
 public class Mail implements IMail {
 	
@@ -10,11 +7,10 @@ public class Mail implements IMail {
 	
 	private String subject;
 	private String	sender;
-	private singlelinkedlist receivers = new singlelinkedlist(); ///////////////in queue not in LL
-	private	singlelinkedlist attachments = new singlelinkedlist(); 
+	private QueueLL receivers = new QueueLL();
+	private	singlelinkedlist attachments = new singlelinkedlist();
 	private String emailBody;
 	private String date;
-	public int priority ;
 	
 	
 	public Mail() {
@@ -32,7 +28,7 @@ public class Mail implements IMail {
 		date = d;
 	}
 	
-	public void setReceivers(singlelinkedlist sll) {
+	public void setReceivers(QueueLL sll) {
 		receivers = sll;
 	}
 	
@@ -58,7 +54,7 @@ public class Mail implements IMail {
 		return date;
 	}
 	
-	public singlelinkedlist getReceivers() {
+	public QueueLL getReceivers() {
 		return receivers;
 	}
 	
