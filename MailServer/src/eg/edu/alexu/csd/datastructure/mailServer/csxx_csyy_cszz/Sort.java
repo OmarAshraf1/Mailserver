@@ -118,6 +118,9 @@ public class Sort implements ISort {
 			if (pivot + 1 < end) {
 				s.push(new pair(pivot + 1, end));
 			}
+			else {
+				break;
+			}
 		}
 	}
 
