@@ -354,7 +354,7 @@ public class MailServer implements IApp {
 			Mail mail = ((Mail) m.get(j));
 			try {
 				// The indexFile of the source folder
-				File file = new File("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + folder + File.separator + "index.txt");
+				File file = new File("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + "index" + File.separator + "index.txt");
 				BufferedReader input = new BufferedReader(new FileReader(file));	// Read from the index file
 				File tempFile = new File("myTempFile.txt");									// Make temp file
 			    PrintWriter writer = new PrintWriter(new FileWriter(tempFile));
@@ -380,7 +380,7 @@ public class MailServer implements IApp {
 				tempFile.renameTo(file);
 				
 				// 2- Move the folder
-			    File sourceFolder = new File("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + folder + File.separator + subject);
+			    File sourceFolder = new File("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + "inbox" + File.separator + subject);
 			    File mailFolder = new File("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + desName.foldername + File.separator + subject);
 		        if (!mailFolder.exists()) 
 		        	mailFolder.mkdir();
