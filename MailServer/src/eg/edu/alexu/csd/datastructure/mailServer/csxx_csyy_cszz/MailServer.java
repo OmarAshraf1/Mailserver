@@ -11,8 +11,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import eg.edu.alexu.csd.datastructure.linkedList.csxx_csyy.singlelinkedlist;
+import eg.edu.alexu.csd.datastructure.linkedList.ILinkedList;
 
 import eg.edu.alexu.csd.datastructure.linkedList.csxx_csyy.DoubleLinkedList;
 import eg.edu.alexu.csd.datastructure.linkedList.csxx_csyy.DoubleLinkedList.Dnode;
@@ -89,7 +92,7 @@ public class MailServer implements IApp {
 	 * 
 	 * في دي هعمل متغير static عشان احطه في باث بتاع الsort
 	 */
-	public static boolean signup(IContact contact) /*throws IOException, FileNotFoundException*/ {		
+	public boolean signup(IContact contact) /*throws IOException, FileNotFoundException*/ {		
 		
 		try {
 			directoryCreation() ;
@@ -329,8 +332,10 @@ public class MailServer implements IApp {
 	
 	public void deleteEmails(ILinkedList mails) {
 		
-		Folder f = new Folder("trash") ;
+		Folder f = new Folder() ;
+		f.foldername = "trash" ;
 		moveEmails(mails, (IFolder)f);
+		
 		
 	}
 
