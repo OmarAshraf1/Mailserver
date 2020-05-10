@@ -89,86 +89,106 @@ public class MailServer implements IApp {
 	 * 
 	 * في دي هعمل متغير static عشان احطه في باث بتاع الsort
 	 */
-
-	public boolean signup(IContact contact) {
-
-		// directory creation
+	public static boolean signup(IContact contact) /*throws IOException, FileNotFoundException*/ {		
+		
 		try {
-			directoryCreation();
-		} catch (IOException e2) {
-			e2.printStackTrace();
+			directoryCreation() ;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		Contact user = (Contact) contact;
-		String name = user.email;
-
-		try (BufferedReader read = new BufferedReader(
-				new FileReader("C:\\server" + File.separator + "accounts" + File.separator + "emails.txt"))) {
-			String line = null;
-			while ((line = read.readLine()) != null) {
-				if (line.equals(name)) {
-					return false;
-				}
-			}
+		
+		Contact user = (Contact) contact ;
+		String email = user.email ;
+		String pass = user.pass;
+			
+		BufferedReader emailReader = null;
+		try {
+			emailReader = new BufferedReader(new FileReader("C:\\server\\accounts\\emails.txt"));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-
-		try (PrintWriter w = new PrintWriter(
-				new FileWriter("C:\\server" + File.separator + "accounts" + File.separator + "emails.txt", true))) {
-			w.println(name);
-			w.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try (PrintWriter w1 = new PrintWriter(
-				new FileWriter("C:\\server" + File.separator + "accounts" + File.separator + "pass.txt", true))) {
-			w1.println(user.pass);
-			w1.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		(new File("C:\\server" + File.separator + "accounts" + File.separator + name)).mkdir(); // creating a user
-																								// folder by his email
-
-		(new File("C:\\server" + File.separator + "accounts" + File.separator + name + File.separator + "inbox"))
-				.mkdir(); // creating inbox folder for the new user
-
-		(new File("C:\\server" + File.separator + "accounts" + File.separator + name + File.separator + "sent"))
-				.mkdir(); // creating a user folder by his email
-
-		(new File("C:\\server" + File.separator + "accounts" + File.separator + name + File.separator + "trash"))
-				.mkdir(); // creating a user folder by his email
-
-		(new File("C:\\server" + File.separator + "accounts" + File.separator + name + File.separator + "/filter"))
-				.mkdir(); // creating a user folder by his email
-
-		(new File("C:\\server" + File.separator + "accounts" + File.separator + name + File.separator + "drafts"))
-				.mkdir(); // creating a user folder by his email
-
+		String line = null;
 		try {
-			(new File("C:\\server" + File.separator + "accounts" + File.separator + name + File.separator + "data.txt"))
-					.createNewFile();
+			while( (line = emailReader.readLine()) != null) {
+				if(line.equals(email)) {
+					emailReader.close();
+					return false ;
+				}
+			}
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} // creating a user folder by his email
-
-		try (PrintWriter w0 = new PrintWriter(new FileWriter(
-				"C:\\server" + File.separator + "accounts" + File.separator + name + File.separator + "data.txt",
-				true))) {
-			w0.println(name);
-			w0.println(user.pass);
-			w0.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		try {
+			emailReader.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 
-		return true;
+		PrintWriter emailRegisteration = null;
+		try {
+			emailRegisteration = new PrintWriter(new FileWriter("C:\\server\\accounts\\emails.txt",true));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		emailRegisteration.println(email);
+		emailRegisteration.close() ;		
 
+		PrintWriter passRegistration = null;
+		try {
+			passRegistration = new PrintWriter(new FileWriter("C:\\server\\accounts\\pass.txt",true));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		passRegistration.println(pass);
+		passRegistration.close() ;
+	
+		new File("C:\\server\\accounts\\" + email).mkdir(); 
+		try {
+			new File("C:\\server\\accounts\\" + email + "\\data.txt" ).createNewFile() ;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}	
+		try {
+			new File("C:\\server\\accounts\\" + email + "\\inbox\\index.txt" ).createNewFile() ;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}	
+		new File("C:\\server\\accounts\\" + email + "\\sent").mkdir() ;  	
+		try {
+			new File("C:\\server\\accounts\\" + email + "\\sent\\index.txt" ).createNewFile() ;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}	
+		new File("C:\\server\\accounts\\" + email + "\\trash" ).mkdir() ;  	
+		try {
+			new File("C:\\server\\accounts\\" + email + "\\trash\\index.txt" ).createNewFile() ;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}	
+		new File("C:\\server\\accounts\\" + email + "\\filter" ).mkdir() ; 
+		try {
+			new File("C:\\server\\accounts\\" + email + "\\filter\\index.txt" ).createNewFile() ;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}	
+		new File("C:\\server\\accounts\\" + email + "\\drafts" ).mkdir() ;  	
+		try {
+			new File("C:\\server\\accounts\\" + email + "\\drafts\\index.txt" ).createNewFile() ;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}	
+	
+		PrintWriter emailPassSaver = null;
+		try {
+			emailPassSaver = new PrintWriter(new FileWriter("C:\\server\\accounts\\" + email + "\\data.txt",true));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		emailPassSaver.println(email);
+		emailPassSaver.println(pass);	
+		emailPassSaver.close();	
+		
+		return true;
 	}
 
 	public void setViewingOptions(IFolder folder, IFilter filter, ISort sort) {
@@ -401,5 +421,234 @@ public class MailServer implements IApp {
 			return false;
 		}
 	}
+		 public static boolean checkReceivers1(IMail email) {
+	    	
+		 Mail newEmail = new Mail();
+		 newEmail = (Mail)email;
+		 String temp = null;
+		 int existedReceivers = 0;
+		 int numOfReceivers = newEmail.getReceivers().size();
+		 for(int i=0; i<numOfReceivers; i++) {
+			 temp = (String) newEmail.getReceivers().dequeue(); 
+			 newEmail.getReceivers().enqueue(temp);
+			 if (new File("C:\\server\\accounts\\" + temp).exists()) {
+				 existedReceivers++;
+			 }
+		 }
+		 if (existedReceivers == numOfReceivers) {
+			 return true;
+		 }
+		 else {
+			 return false; 
+		 }
+	 }
+	
+	 public static ArrayList<String> checkReceivers2(IMail email) {
+	    	
+		 Mail newEmail = new Mail();
+		 newEmail = (Mail)email;
+		 
+		 ArrayList<String> notExistedReceivers =new ArrayList<String>();
+		
+		 String temp = null;
+		 int numOfReceivers = newEmail.getReceivers().size();
+		 
+		 for(int i=0; i<numOfReceivers; i++) {	
+			 temp = (String) newEmail.getReceivers().dequeue(); 
+			 if (!new File("C:\\server\\accounts\\" + temp).exists()) {
+				 notExistedReceivers.add(temp);
+			 }
+			 else {
+				 newEmail.getReceivers().enqueue(temp);
+			 }
+		 }
+		 return notExistedReceivers;
 
+	 }
+	
+    public static boolean compose(IMail email) /*throws IOException, FileNotFoundException, FileAlreadyExistsException, DirectoryNotEmptyException, UnsupportedOperationException, NoSuchFileException*/ {
+    	
+    	Mail newEmail = new Mail();
+    	newEmail = (Mail)email;
+    	
+    	if (new File ("C:\\server\\accounts\\" + newEmail.getSender() + "\\sent\\" + newEmail.getSubject()).exists()) {
+    		System.out.println("Your Subject is Dublicated");
+    		return false;
+    	}
+    	
+    	PrintWriter emailWriter1 = null;
+		try {
+			emailWriter1 = new PrintWriter(new FileWriter("C:\\server\\accounts\\" + newEmail.getSender() + "\\sent\\index.txt",true));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	emailWriter1.println(newEmail.getSubject());
+    	emailWriter1.println(newEmail.getDate());
+    	emailWriter1.println(newEmail.getSender());
+    	
+    	int numOfReceivers = newEmail.getReceivers().size();
+    	QueueLL getTempReceivers1 = new QueueLL();
+    	QueueLL getTempReceivers2 = new QueueLL();
+    	String temp;
+    	for (int i=0; i<numOfReceivers; i++) {
+    		temp = (String) newEmail.getReceivers().dequeue();
+    		getTempReceivers1.enqueue(temp);
+    		getTempReceivers2.enqueue(temp);
+    		newEmail.getReceivers().enqueue(temp);
+    	}
+    
+    	emailWriter1.println(numOfReceivers);
+    	for (int i=0; i<numOfReceivers; i++) {
+    		emailWriter1.println(newEmail.getReceivers().dequeue());
+    	}
+    	
+    	int numOfAttachments = newEmail.getAttachments().size();
+    	emailWriter1.println(numOfAttachments);
+    	for(int i=0; i<numOfAttachments; i++) {
+    		emailWriter1.println(newEmail.getAttachments().get(i));
+    	}
+    	
+    	emailWriter1.println("***");
+    	emailWriter1.close();    	
+
+    	new File ("C:\\server\\accounts\\" + newEmail.getSender() + "\\sent\\" + newEmail.getSubject()).mkdir();
+    	try {
+			new File ("C:\\server\\accounts\\" + newEmail.getSender() + "\\sent\\" + newEmail.getSubject() + "\\emailBody.txt").createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	PrintWriter emailContentWriter1 = null;
+		try {
+			emailContentWriter1 = new PrintWriter(new FileWriter("C:\\server\\accounts\\" + newEmail.getSender() + "\\sent\\" + newEmail.getSubject() + "\\emailBody.txt",true));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	emailContentWriter1.println(newEmail.getEmailBody());
+    	emailContentWriter1.close();
+    	
+    	for (int i=0; i<numOfAttachments; i++) {
+        	String attachments = (String) newEmail.getAttachments().get(i);
+        	
+        	String[] spliter = attachments.split("\\n");
+        	String attachmentPath = spliter[0];
+        	String attachmentName = spliter[1];
+        	
+            File source = new File(attachmentPath);
+            File dest = new File("C:\\server\\accounts\\" + newEmail.getSender() + "\\sent\\" + newEmail.getSubject() + "\\" + attachmentName);
+            try {
+				Files.copy(source.toPath(), dest.toPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    	
+    	for (int i=0; i<numOfReceivers; i++) {
+    		
+    		String tempReceiver = null;
+    		String currentReceiver = null;
+    		currentReceiver = (String) getTempReceivers1.dequeue();
+    		getTempReceivers1.enqueue(currentReceiver);
+        	
+    		PrintWriter emailWriter2 = null;
+			try {
+				emailWriter2 = new PrintWriter(new FileWriter("C:\\server\\accounts\\" + currentReceiver + "\\inbox\\index.txt",true));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        	
+        	emailWriter2.println(newEmail.getSubject());
+        	emailWriter2.println(newEmail.getDate());
+        	emailWriter2.println(newEmail.getSender());
+        	
+        	
+           	emailWriter2.println(numOfReceivers);
+        	for (int j=0; j<numOfReceivers; j++) {
+        		tempReceiver = (String) getTempReceivers2.dequeue();
+        		getTempReceivers2.enqueue(tempReceiver);
+        		emailWriter2.println(tempReceiver);
+        	}
+        	
+        	emailWriter2.println(numOfAttachments);
+        	for(int k=0; k<numOfAttachments; k++) {
+        		emailWriter2.println(newEmail.getAttachments().get(k));
+        	}
+        	
+        	emailWriter2.println("***");
+        	emailWriter2.close();    	
+
+    		
+        	new File ("C:\\server\\accounts\\" + currentReceiver + "\\inbox\\" + newEmail.getSubject()).mkdir();
+        	try {
+				new File ("C:\\server\\accounts\\" + currentReceiver + "\\inbox\\" + newEmail.getSubject() + "\\emailBody.txt").createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        	
+        	PrintWriter emailContentWriter2 = null;
+			try {
+				emailContentWriter2 = new PrintWriter(new FileWriter("C:\\server\\accounts\\" + currentReceiver + "\\inbox\\" + newEmail.getSubject() + "\\emailBody.txt",true));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        	emailContentWriter2.println(newEmail.getEmailBody());
+        	emailContentWriter2.close();
+        	
+        	for (int l=0; l<numOfAttachments; l++) {
+            	String attachments = (String) newEmail.getAttachments().get(l);
+            	String[] spliter = attachments.split("\\n");
+            	String attachmentPath = spliter[0];
+            	String attachmentName = spliter[1];
+            	
+            	File source = new File(attachmentPath);
+            	File dest = new File("C:\\server\\accounts\\" + currentReceiver + "\\inbox\\" + newEmail.getSubject() + "\\" + attachmentName);
+            	try {
+					Files.copy(source.toPath(), dest.toPath());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	}
+    	}    	
+    	return true;
+    }
+
+	public static boolean specialCompose (IMail email) {
+		Mail newEmail = new Mail();
+    	newEmail = (Mail)email;
+    	
+    	if (new File ("C:\\server\\accounts\\" + newEmail.getSender() + "\\drafts\\" + newEmail.getSubject()).exists()) {
+    		System.out.println("Your Subject is Dublicated");
+    		return false;
+    	}
+    	
+    	PrintWriter emailWriter1 = null;
+		try {
+			emailWriter1 = new PrintWriter(new FileWriter("C:\\server\\accounts\\" + newEmail.getSender() + "\\drafts\\index.txt",true));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	emailWriter1.println(newEmail.getSubject());
+    	emailWriter1.println(newEmail.getDate());
+    	emailWriter1.println(newEmail.getSender());
+    	
+    	int numOfReceivers = newEmail.getReceivers().size();
+    	emailWriter1.println(numOfReceivers);
+    	for (int i=0; i<numOfReceivers; i++) {
+    		emailWriter1.println(newEmail.getReceivers().dequeue());
+    	}
+    	
+    	int numOfAttachments = newEmail.getAttachments().size();
+    	emailWriter1.println(numOfAttachments);
+    	for(int i=0; i<numOfAttachments; i++) {
+    		emailWriter1.println(newEmail.getAttachments().get(i));
+    	}
+    	
+    	emailWriter1.println("***");
+    	emailWriter1.close();    	
+
+		
+		return true;
+	}
 }
