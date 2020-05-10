@@ -270,7 +270,6 @@ public class MailServer implements IApp {
 
 	public IMail[] listEmails(int page) {
 
-		// setViewingOptions(folder, filter, sort);
 		Folder f = new Folder();
 		Sort s = new Sort();
 		Filter filt = new Filter();
@@ -302,6 +301,102 @@ public class MailServer implements IApp {
 			i++;
 		}
 		return mails;
+	}
+	
+	
+	public void deleteEmails(ILinkedList mails) {
+		
+		Folder f = new Folder("trash") ;
+		moveEmails(mails, f);
+		
+	}
+
+	
+	public void moveEmails(ILinkedList mails, IFolder des) {
+		
+		DoubleLinkedList m = (DoubleLinkedList) mails;
+		Folder desName = (Folder) des;
+		
+	try {
+		// The indexFile of the des folder
+		File newIndexFile = new File("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + desName.foldername + File.separator + "index.txt");									
+		PrintWriter write = new PrintWriter(new FileWriter(newIndexFile,true));
+
+		for (int j = 0 ; j < m.size() ; j++) {
+			Mail mail = ((Mail) m.get(j));
+			try {
+				// The indexFile of the source folder
+				File file = new File("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + folder + File.separator + "index.txt");
+				BufferedReader input = new BufferedReader(new FileReader(file));	// Read from the index file
+				File tempFile = new File("myTempFile.txt");									// Make temp file
+			    PrintWriter writer = new PrintWriter(new FileWriter(tempFile));
+			    String line;
+				
+			    // 1- Search for the mail in the indexFile and delete its information
+				String subject = mail.getSubject();			
+				while ( (line = input.readLine()) != null ){
+					if ( subject.equals(line) ) {								
+				        while ( !(line = input.readLine()).equals("***") ) {
+				        	continue;	
+				        }
+					}
+					else {
+						writer.println(line);
+					}
+				}
+				input.close();
+				writer.close();
+									//Delete the original file
+				file.delete();
+										//Rename the new file to the filename the original file had
+				tempFile.renameTo(file);
+				
+				// 2- Move the folder
+			    File sourceFolder = new File("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + folder + File.separator + subject);
+			    File mailFolder = new File("C:\\server" + File.separator + "accounts" + File.separator + userfold + File.separator + desName.foldername + File.separator + subject);
+		        if (!mailFolder.exists()) 
+		        	mailFolder.mkdir();
+			    moveDir(sourceFolder.toPath(), mailFolder.toPath());
+			    sourceFolder.delete();
+			    
+			    
+			    
+			    // 3- Write the mail information in the indexFile which in the des folder
+				write.println(mail.getSubject());
+				write.println(mail.getDate());
+				write.println(mail.getSender());
+				singlelinkedlist receivers = mail.getReceivers();
+				for (int i = 0 ; i < receivers.size() ; i++)
+					write.println(receivers.get(i));
+				
+				write.println("***");
+
+								
+			} 
+			catch (IOException e) {
+				System.out.println("Erorr!!");
+			}
+		}
+    	}catch (IOException e) {
+		System.out.println("Erorr!!");
+		}
+	
+	}
+
+	
+	private boolean moveDir(Path src, Path dest) {
+		if (src.toFile().isDirectory()) {
+			for (File file : src.toFile().listFiles()) {
+				moveDir(file.toPath(), dest.resolve(src.relativize(file.toPath())));
+			}
+		}
+
+		try {
+			Files.move(src, dest, StandardCopyOption.REPLACE_EXISTING);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
 	}
 
 }
