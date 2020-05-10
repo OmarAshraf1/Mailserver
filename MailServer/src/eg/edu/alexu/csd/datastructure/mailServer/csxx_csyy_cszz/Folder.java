@@ -6,6 +6,9 @@ public class Folder implements IFolder {
 	
 	public String foldername ; 
 	
+	Folder(){
+	}
+	
 	Folder(String folder){
 		foldername = folder;
 	}
