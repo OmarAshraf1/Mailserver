@@ -1,12 +1,14 @@
-package eg.edu.alexu.csd.datastructure.mailServer;
+package eg.edu.alexu.csd.datastructure.linkedList.csxx_csyy;
+
+import eg.edu.alexu.csd.datastructure.linkedList.ILinkedList;
 
 public class DoubleLinkedList implements ILinkedList {
-	Dnode head ;
-	Dnode tail ;
-	static class Dnode{
+	public Dnode head ;
+	public Dnode tail ;
+	public static class Dnode{
 		Object element ;
-		Dnode next ;
-		Dnode prev ;
+		public Dnode next ;
+		public Dnode prev ;
 		Dnode(Object data){
 			element = data ;
 			next = prev = null ;
@@ -75,7 +77,6 @@ public class DoubleLinkedList implements ILinkedList {
 		int count= 0 ;
 		
 		if(index == 0 ) {
-			System.out.println(head.element);
 			 return head.element ;
 		}
 		
@@ -83,7 +84,6 @@ public class DoubleLinkedList implements ILinkedList {
 		Dnode temp = head ;
 		while(temp != null) {
 			if(count == index) {
-				System.out.println(temp.element);
 				return temp.element ;
 			}
 			temp = temp.next ; 
@@ -133,11 +133,9 @@ public class DoubleLinkedList implements ILinkedList {
 	
 	public boolean isEmpty() {
 		if(length == 0) {
-			System.out.println(true);
 			return true ;
 		}
 		else {
-			System.out.println(false);
 			return false ;
 		}
 	}
@@ -180,7 +178,6 @@ public class DoubleLinkedList implements ILinkedList {
 		
 	}
 	public int size() {
-		System.out.println(length);
 		return length ;
 	
 	}
@@ -213,13 +210,76 @@ public class DoubleLinkedList implements ILinkedList {
 		}
 		while(temp != null) {
 			if(temp.element == o ) {
-				System.out.println(true);
 				return true ;
 			}
 			temp = temp.next ;
 	
 		}
-		System.out.println(false);
 		return false ;
 	}
+	
+	
+	public void print() {
+		Dnode temp = head ;
+		while(temp != null) {
+			System.out.println(temp.element);
+			temp = temp.next ;
+		}
+	}
+	public Dnode getnode(int index) {
+		int count= 0 ;
+		
+		if(index == 0 ) {
+			 return head ;
+		}
+		
+		else if(index >= 0 && index < length  ) {
+		Dnode temp = head ;
+		while(temp != null) {
+			if(count == index) {
+				return temp ;
+			}
+			temp = temp.next ; 
+			count++ ;
+			}
+		}
+		
+		throw new RuntimeException();
+			
+		
+	}
+	public void swapnodes(DoubleLinkedList l , int start ,int end) {
+		if(start == end) {
+			return ;
+		}
+		
+		Object temp = l.get(start);
+		l.getnode(start).element = l.get(end) ;
+		l.getnode(end).element = temp ;
+		
+	}
+	public void reverse() { 
+        Dnode temp = null; 
+        Dnode current = head; 
+  
+        
+        while (current != null) { 
+            temp = current.prev; 
+            current.prev = current.next; 
+            current.next = temp; 
+            current = current.prev; 
+        } 
+  
+        
+        if (temp != null) { 
+            head = temp.prev; 
+        } 
+    } 
+	
+	
+	
 }
+
+
+
+
