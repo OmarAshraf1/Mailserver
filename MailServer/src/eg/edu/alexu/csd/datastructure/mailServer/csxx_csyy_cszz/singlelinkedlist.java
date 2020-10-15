@@ -1,19 +1,23 @@
-package eg.edu.alexu.csd.datastructure.mailServer;
+package eg.edu.alexu.csd.datastructure.linkedList.csxx_csyy;
+
+
+import eg.edu.alexu.csd.datastructure.linkedList.ILinkedList ;
+
 
 public class singlelinkedlist implements ILinkedList {
-	Node head ;
+	public Node head ;
 	int length = 0 ;
 	
-	static class Node {
-		Object data ;
-		Node next ;
+	    public static class Node {
+	    	Object data ;
+	    public Node next ;
 		Node(Object d){
 			this.data = d ;
 			next = null ;
 		}
 		
 	}
-	 
+	
 	
 	public void add(int index, Object element) {
 		int count = 0;
@@ -64,21 +68,21 @@ public class singlelinkedlist implements ILinkedList {
 		
 		length ++ ;
 	}
+	
 	public Object get(int index) {
 		
 		Node p = head ;
 		int count = 0 ;
 		
-		while(p != null) {
+		 while(p != null) {
 			 
 			if(index == count) {
-				//System.out.println(p.data);
 				return p.data ;
-			}
+					}
 			p=p.next ;
 			count ++ ;
-		}
-		throw new RuntimeException();
+	}
+		 throw new RuntimeException();
 			
 		
 	}
@@ -122,10 +126,8 @@ public class singlelinkedlist implements ILinkedList {
 	public boolean isEmpty() {
 		
 		if(length == 0) {
-			System.out.println(true);
 			return true ;
 		}
-		System.out.println(false);
 		return false ;
 		
 	}
@@ -155,7 +157,6 @@ public class singlelinkedlist implements ILinkedList {
 		
 	}
 	public int size() {
-		//System.out.println(length);
 		return length ;
 		
 	}
@@ -185,12 +186,10 @@ public class singlelinkedlist implements ILinkedList {
 		}
 		while(temp != null) {
 			if(temp.data == o) {
-				System.out.println(true);
 				return true ;
 			}
 			temp = temp.next ;
 		}
-		System.out.println(false);
 		return false ;
 	}
 	
@@ -202,8 +201,65 @@ public class singlelinkedlist implements ILinkedList {
 			temp = temp.next ;
 		}
 	}
+	/**
+	 * Method to return a node to be used in MailServer 	
+	 * @param index
+	 * @return Node
+	 */	
+	public Node getnode(int index) {
 		
+		Node p = head ;
+		int count = 0 ;
+		
+		 while(p != null) {
+			 
+			if(index == count) {
+				return p ;
+					}
+			p=p.next ;
+			count ++ ;
+	}
+		 throw new RuntimeException();
+			
+		
+	}
 	
+	/**
+	 * Method to swap nodes used in Mail server project
+	 * @param l
+	 * @param start
+	 * @param end
+	 */
+	
+	public void swapnodes(singlelinkedlist l , int start ,int end) {
+		if(start == end) {
+			return ;
+		}
+		
+		Object temp = l.get(start);
+		l.getnode(start).data = l.get(end) ;
+		l.getnode(end).data = temp ;
+		
+	}
+	public Node reverse(Node head) {
+		if(head == null) { 
+            return head; 
+        } 
+  
+        if(head.next == null) { 
+            return head; 
+        } 
+  
+        Node newHeadNode = reverse(head.next); 
+  
+        head.next.next = head; 
+        head.next = null; 
+  
+        return newHeadNode; 
+    } 
+    
+	
+
 	
 	
 	
@@ -211,3 +267,6 @@ public class singlelinkedlist implements ILinkedList {
 		
 	}
 	
+	
+
+
